@@ -1,0 +1,5 @@
+[local]
+localhost ansible_connection=local ansible_python_interpreter=python3
+
+[ec2]
+ec2-nginx-demo ansible_ssh_host=3.141.219.159 ansible_user=ubuntu ansible_python_interpreter=python3

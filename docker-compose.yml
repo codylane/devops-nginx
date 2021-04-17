@@ -1,0 +1,29 @@
+---
+version: '3.8'
+
+networks:
+  nginx:
+
+services:
+  nginx:
+    build:
+      context: '.'
+      dockerfile: 'Dockerfile-nginx'
+      args:
+        LANG: "${LANG}"
+    image: "devops-nginx"
+    hostname: "${NGINX_HOST}"
+    container_name: "${NGINX_HOST}"
+    ports:
+      - "${NGINX_EXPOSED_PORT}:${NGINX_PORT}"
+      - "443:443/tcp"
+    networks:
+      - nginx
+    environment:
+      NGINX_HOST: "${NGINX_HOST}"
+      NGINX_PORT: "${NGINX_PORT}"
+      LANG: "${LANG}"
+    volumes:
+      - './docker/etc/letsencrypt:/etc/letsencrypt'
+      - './docker/etc/nginx/templates:/etc/nginx/templates'
+      - './docker/var/www:/var/www:ro'

@@ -1,0 +1,8 @@
+---
+
+aws_ec2_type: t2.micro
+ubuntu_2004_ami: ami-08962a4068733a2b6
+wait_timeout: 300
+public_ssh_key: "{{ lookup('file', '~/.ssh/id_rsa.pub') }}"
+keypair_name: devops
+instance_name: ec2-nginx-demo
