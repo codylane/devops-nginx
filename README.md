@@ -1,6 +1,8 @@
 devops-nginx
 ------------
 
+[![Build Status](https://travis-ci.com/codylane/devops-nginx.svg?branch=main)](https://travis-ci.com/codylane/devops-nginx)
+
 # Getting Started
 
 - Ensure that you have docker and the docker client libraries installed.
@@ -19,7 +21,7 @@ devops-nginx
 | LANG                   | en_US.UTF-8                  | Y             | Locale                                                         |
 | NGINX_HOST             | devops-nginx                 | Y             | The DNS hostname to use for serving content                    |
 | NGINX_PORT             | 80                           | Y             | The TCP port (inside the container)                            |
-| NGINX_EXPOSED_PORT     | 8080                         | Y             | The TCP port served via your docker host (external facing)     |
+| NGINX_EXPOSED_PORT     | 80                           | Y             | The TCP port served via your docker host (external facing)     |
 | EXTERNAL_IP            |                              | N             | The external ip address that may be used to serve your content |
 | AWS_ACCESS_KEY_ID      | "${AWS_ACCESS_KEY_ID:-}"     | Y             | This is your AWS access key id provided in the IAM console     |
 | AWS_SECRET_ACCESS_KEY  | "${AWS_SECRET_ACCESS_KEY:-}" | Y             | This is your AWS secret access key provided in the IAM console |
