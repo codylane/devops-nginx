@@ -1,12 +1,12 @@
 server {
-    listen       ${NGINX_PORT};
-    listen  [::]:${NGINX_PORT};
+    listen       ${NGINX_PORT} default_server;
+    listen  [::]:${NGINX_PORT} default_server;
+
     server_name  ${HOSTNAME} localhost;
 
     access_log  /var/log/nginx/default.access.log  main;
 
     location / {
         root   /var/www/default;
-        index  index.html index.htm;
     }
 }

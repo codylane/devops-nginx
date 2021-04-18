@@ -94,7 +94,7 @@
       lineinfile:
         state: present
         path: '/etc/hosts'
-        line: "{{ demo_public_ip }} {{ lookup('env', 'NGINX_HOST') }}"
+        line: "{{ demo_public_ip }} {{ lookup('env', 'NGINX_HOST') }} ec2-nginx-demo.codylane-devops.com"
 
     - name: update our ansible inventory file to include the ec2 public ip
       delegate_to: localhost

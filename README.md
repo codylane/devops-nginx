@@ -13,20 +13,26 @@ devops-nginx
 - Ensure awscli is installed
   - https://aws.amazon.com/cli/
 
-
 # Environment Variables
 
-| Environment variable   | Default                      | Required      | Description                                                    |
-| ---------------------- | -------------                | ------------- | -----------------------------------------------------------    |
-| LANG                   | en_US.UTF-8                  | Y             | Locale                                                         |
-| NGINX_HOST             | devops-nginx                 | Y             | The DNS hostname to use for serving content                    |
-| NGINX_PORT             | 80                           | Y             | The TCP port (inside the container)                            |
-| NGINX_EXPOSED_PORT     | 80                           | Y             | The TCP port served via your docker host (external facing)     |
-| EXTERNAL_IP            |                              | N             | The external ip address that may be used to serve your content |
-| AWS_ACCESS_KEY_ID      | "${AWS_ACCESS_KEY_ID:-}"     | Y             | This is your AWS access key id provided in the IAM console     |
-| AWS_SECRET_ACCESS_KEY  | "${AWS_SECRET_ACCESS_KEY:-}" | Y             | This is your AWS secret access key provided in the IAM console |
-| AWS_REGION             | "${AWS_REGION:-us-east-2}"   | N             | This is the default AWS region you want ot use                 |
+| Environment variable   | Default                             | Required      | Description                                                                         |
+| ---------------------- | -------------                       | ------------- | -----------------------------------------------------------                         |
+| LANG                   | en_US.UTF-8                         | Y             | Locale                                                                              |
+| NGINX_HOST             | devops-nginx                        | Y             | The DNS hostname to use for serving content                                         |
+| NGINX_PORT             | 80                                  | Y             | The TCP port (inside the container)                                                 |
+| NGINX_EXPOSED_PORT     | 80                                  | Y             | The TCP port served via your docker host (external facing)                          |
+| EXTERNAL_IP            |                                     | N             | The external ip address that may be used to serve your content                      |
+| AWS_ACCESS_KEY_ID      | "${AWS_ACCESS_KEY_ID:-}"            | Y             | This is your AWS access key id provided in the IAM console                          |
+| AWS_SECRET_ACCESS_KEY  | "${AWS_SECRET_ACCESS_KEY:-}"        | Y             | This is your AWS secret access key provided in the IAM console                      |
+| AWS_REGION             | "${AWS_REGION:-us-east-2}"          | N             | This is the default AWS region you want ot use                                      |
+| MY_DOMAIN              | "${MY_DOMAIN:-codylane-devops.com}" | Y             | The domain to use when configuring NGINX. `codylane-devops.com` is a private domain |
 
+## The following variables are customizable outside of [envs/common](envs/common)
+
+- `AWS_ACCESS_KEY_ID`
+- `AWS_SECRET_ACCESS_KEY`
+- `AWS_REGION`
+- `MY_DOMAIN`
 
 # Usage
 
@@ -71,21 +77,21 @@ make ec2
 
 ### How to run the services on your local workstation
 
-## Ensure all the prerequisites are installed
+#### Ensure all the prerequisites are installed
 
 ```
 make prereqs
 ```
 
 
-## A one-shot command to [clean, init, build, run] the container
+#### A one-shot command to [clean, init, build, run] the container
 
 ```
 make
 ```
 
 
-## Build the container
+#### Build the container
 
 - This step creates the base image for serving up our demo via nginx.
 
@@ -94,7 +100,7 @@ make build
 ```
 
 
-## Remove and delete the container
+#### Remove and delete the container
 
 - **NOTE:** This step does not delete files or directories for the bind
             mounted storage as noted in the `volumes`
@@ -105,21 +111,21 @@ make clean
 ```
 
 
-## Show the logs for the running container
+#### Show the logs for the running container
 
 ```
 make log
 ```
 
 
-## Running the container also invokes [build]
+#### Running the container also invokes [build]
 
 ```
 make run
 ```
 
 
-## Interactively login to the container via a shell
+#### Interactively login to the container via a shell
 
 - **NOTE:** This step assumes the container is running.
 
@@ -128,7 +134,7 @@ make shell
 ```
 
 
-## Show status of the container
+#### Show status of the container
 
 ```
 make status

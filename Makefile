@@ -22,7 +22,8 @@ build:
 clean:
 	@. envs/$(ENVIRONMENT); \
 	docker-compose down --remove-orphans; \
-	docker-compose rm -fsv $(CONTAINER)
+	docker-compose rm -fsv $(CONTAINER); \
+	rm -rf docker/etc/letsencrypt/csr/*.pem
 
 
 init:
@@ -62,6 +63,8 @@ prereqs:
 	command -v aws >>/dev/null
 	aws ec2 describe-instances
 
+
+## EC2 targets
 
 ec2: init ec2_bootstrap ec2_provision
 

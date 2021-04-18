@@ -11,3 +11,5 @@ RUN apt-get autoclean                          &&  \
       dnsutils                                     \
       python3-certbot-nginx &&                     \
     mkdir -p /var/www/default
+
+COPY docker-entrypoint.d/* /docker-entrypoint.d/
