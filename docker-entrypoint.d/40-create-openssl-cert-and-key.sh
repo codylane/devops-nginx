@@ -54,11 +54,11 @@ KEY_EXPIRE_AFTER_DAYS=365
 KEY_TYPE="rsa"
 KEY_BITS=4096
 KEY_NAME="${KEY_NAME:-$(hostname -f)}"
-KEY_COUNTRY="${KEY_COUNTRY:-US}"
-KEY_STATE="${KEY_STATE:-DC}"
-KEY_LOCATION="${KEY_LOCATION:-DC}"
-KEY_ORG="${KEY_ORG:-HOME}"
-KEY_ORG_UNIT="${KEY_ORG:-IT Department}"
+# KEY_COUNTRY="${KEY_COUNTRY:-US}"
+# KEY_STATE="${KEY_STATE:-DC}"
+# KEY_LOCATION="${KEY_LOCATION:-DC}"
+# KEY_ORG="${KEY_ORG:-HOME}"
+# KEY_ORG_UNIT="${KEY_ORG:-IT Department}"
 KEY_CN="${KEY_CN:-${KEY_NAME}}"
 
 [ -f "${KEY_DIR}/${KEY_NAME}.crt" ] && exit 0
@@ -72,7 +72,7 @@ openssl req \
   -newkey "${KEY_TYPE}:${KEY_BITS}" \
   -keyout "${KEY_DIR}/${KEY_NAME}.key" \
   -out    "${KEY_DIR}/${KEY_NAME}.crt" \
-  -subj   "/C=${KEY_COUNTRY}/ST=${KEY_STATE}/L=${KEY_LOCATION}/O=${KEY_ORG}/OU=${KEY_ORG_UNIT}/CN=${KEY_CN}"
+  -subj   "/CN=${KEY_CN}"
 
 cat > /etc/nginx/conf.d/ssl.conf <<EOF
 server {
