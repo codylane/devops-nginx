@@ -24,7 +24,7 @@ devops-nginx
 | EXTERNAL_IP            |                                     | N             | The external ip address that may be used to serve your content                      |
 | AWS_ACCESS_KEY_ID      | "${AWS_ACCESS_KEY_ID:-}"            | Y             | This is your AWS access key id provided in the IAM console                          |
 | AWS_SECRET_ACCESS_KEY  | "${AWS_SECRET_ACCESS_KEY:-}"        | Y             | This is your AWS secret access key provided in the IAM console                      |
-| AWS_REGION             | "${AWS_REGION:-us-east-2}"          | N             | This is the default AWS region you want ot use                                      |
+| AWS_REGION             | "${AWS_REGION:-us-east-2}"          | N             | This is the default AWS region you want to use                                      |
 | MY_DOMAIN              | "${MY_DOMAIN:-codylane-devops.com}" | Y             | The domain to use when configuring NGINX. `codylane-devops.com` is a private domain |
 
 ## The following variables are customizable outside of [envs/common](envs/common)
@@ -53,7 +53,7 @@ devops-nginx
 
 ```
 
-- Next, we initialize the aws cli to use our AWS account.
+- Next, we initialize the awscli to use our AWS account.
 - **NOTE:** This utility is not smart enough to update AWS credentials
   if the files already exist on disk.  If they do, you will need to
   modify them by hand.  See the [Makefile](Makefile) for details.
@@ -139,3 +139,15 @@ make shell
 ```
 make status
 ```
+
+
+# Validation
+
+- If provisioning in EC2 was successful you should be able to open your
+  browser to the following public endpoints assuming this is running
+  from the same workstation that you deployed this code.
+
+- **NOTE:** due to time constraints the SSL cert is a self-signed
+  certificate that is generated when the container is started.
+  - https://ec2-nginx-demo.us-east-2.compute.amazonaws.com/
+  - http://ec2-nginx-demo.us-east-2.compute.amazonaws.com/
