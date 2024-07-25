@@ -40,8 +40,25 @@ INIT_CONDA_ENVS=.conda.envs
 INIT_ENV=.init.env
 
 
-get_os_type() {
+err()
+{
+  echo "ERR: $* exiting" >&2
+  exit 1
+}
 
+
+info()
+{
+  local MSG_COLOR="${1:-$WHITE}"
+  shift
+
+  echo -en "${MSG_COLOR}${@}\033[0m"
+  echo
+}
+
+
+get_os_type()
+{
   case "$(uname -s)" in
 
     Darwin)
@@ -61,18 +78,35 @@ get_os_type() {
     ;;
 
   esac
-
 }
 
-has_conda_env() {
+
+has_conda_env()
+{
   conda list -n "${1}" 2>&1 >>/dev/null 2>&1
 }
 
-install_miniconda_linux64() {
 
+install_miniconda_linux64()
+{
   local MINICONDA_INSTALLER="Miniconda3-latest-Linux-x86_64.sh"
   local MINICONDA_URL="https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh"
 
+  init_conda
+}
+
+
+install_miniconda_osx64()
+{
+  local MINICONDA_INSTALLER="Miniconda3-latest-MacOSX-x86_64.sh"
+  local MINICONDA_URL="https://repo.continuum.io/miniconda/Miniconda3-latest-MacOSX-x86_64.sh"
+
+  init_conda
+}
+
+
+init_conda()
+{
   curl -LO ${MINICONDA_URL}
   chmod 755 ${MINICONDA_INSTALLER}
 
@@ -81,38 +115,15 @@ install_miniconda_linux64() {
   export PATH="${PATH}:${MINICONDA_INSTALL_DIR}/bin"
 
   conda init ${SHELL##*/}
-}
 
-install_miniconda_osx64() {
-
-  local MINICONDA_INSTALLER="Miniconda3-latest-MacOSX-x86_64.sh"
-  local MINICONDA_URL="https://repo.continuum.io/miniconda/Miniconda3-latest-MacOSX-x86_64.sh"
-
-  curl -LO ${MINICONDA_URL}
-  chmod 755 ${MINICONDA_INSTALLER}
-
-  ./${MINICONDA_INSTALLER} -b -u -p ${MINICONDA_INSTALL_DIR}
-
-  export PATH="${PATH}:${MINICONDA_INSTALL_DIR}/bin"
-
-  conda init
-}
-
-err() {
-  echo "ERR: $* exiting" >&2
-  exit 1
+  [ -f "${HOME}/.profile" ]      && . "${HOME}/.profile"      || true
+  [ -f "${HOME}/.bash_profile" ] && . "${HOME}/.bash_profile" || true
+  [ -f "${HOME}/.bashrc" ]       && . "${HOME}/.bashrc"       || true
 }
 
 
-info() {
-  local MSG_COLOR="${1:-$WHITE}"
-  shift
-
-  echo -en "${MSG_COLOR}${@}\033[0m"
-  echo
-}
-
-activate-ci() {
+activate-ci()
+{
 
   info "$GREEN" "Activating CI..."
   echo
@@ -121,14 +132,16 @@ activate-ci() {
 
 }
 
-activate-prod() {
+activate-prod()
+{
 
   info "$GREEN" "Activating PROD..."
   echo
 
 }
 
-activate-env() {
+activate-env()
+{
   local ACTIVATE_ENV="${1}"
 
   case "$ACTIVATE_ENV" in
@@ -145,30 +158,31 @@ activate-env() {
 }
 
 
-filetime-last-change-in-seconds() {
-
+filetime-last-change-in-seconds()
+{
   stat -c %Z "${1}"
-
 }
 
-get-file-contents() {
 
+get-file-contents()
+{
   cat "${1}" 2>>/dev/null || echo ""
-
 }
 
-get-cache-filename() {
+get-cache-filename()
+{
 
   local _default_cache="${1}"
-  is-conda-env-active && _default_cache="${1}-${CONDA_DEFAULT_ENV}" || _default_cache="${1}"
+  _default_cache="${1}-${CONDA_DEFAULT_ENV}"
 
-  local CACHE_FILENAME="${BIN_DIR}/.${_default_cache##*/}.lcts"
+  local cache_filename="${BIN_DIR}/.${_default_cache##*/}.lcts"
 
-  echo "${CACHE_FILENAME}"
+  echo "${cache_filename}"
 
 }
 
-update-cache-file() {
+update-cache-file()
+{
   [ -z "${1}" ] && err "Please pass a filename path as the first argument"
 
   local DEFAULT_CACHE_FILENAME=$(get-cache-filename "${1}")
@@ -181,11 +195,11 @@ update-cache-file() {
   echo "${LAST_CHANGE_TIME_SECS}" > "${CACHE_FILENAME}"
 
   echo $LAST_CHANGE_TIME_SECS
-
 }
 
 
-cache-file-last-change-in-seconds() {
+cache-file-last-change-in-seconds()
+{
   [ -z "${1}" ] && err "Please pass a filename path as the first argument"
 
   local CHECK_FILENAME="${1}"
@@ -207,11 +221,11 @@ cache-file-last-change-in-seconds() {
   [ $DELTA_LCTS -lt 0 ] && DELTA_LCTS=$((DELTA_LCTS * -1))
 
   echo $DELTA_LCTS
-
 }
 
-debug_console() {
 
+debug_console()
+{
   echo "#############|  Entering DEBUG mode  |####################";
   CMD=
   set -x
@@ -233,17 +247,11 @@ debug_console() {
   done
   set +x
   echo "#############|  End of DEBUG mode |####################";
-
 }
 
-is-conda-env-active() {
 
-  # If not NULL, environment is active, rc=0, otherwise rc=1
-  [ -n ${CONDA_DEFAULT_ENV} ]
-
-}
-
-run-pip-if-recent-requirements-change() {
+run-pip-if-recent-requirements-change()
+{
   local REQUIREMENTS_FILE="${1}"
   local CACHE_FILE=
 
@@ -267,10 +275,11 @@ run-pip-if-recent-requirements-change() {
     pip install -r "${REQUIREMENTS_FILE}"
     [ -f setup.py ] && pip install -e . || true
   fi
-
 }
 
-init-osx() {
+
+init-osx()
+{
   case "${OS_ARCH}" in
 
     x86_64)
@@ -283,11 +292,11 @@ init-osx() {
       ;;
 
   esac
-
 }
 
-init-linux() {
 
+init-linux()
+{
   info "$GREEN" "Initializing linux deps"
 
   case "${OS_ARCH}" in
@@ -302,28 +311,28 @@ init-linux() {
       ;;
 
   esac
-
 }
 
-coverage_report() {
 
+coverage_report()
+{
   local test_module="${1:-tests/}"
 
   [ "$#" -gt 1 ] && shift
 
   coverage run -m pytest -vvrs ${@} ${test_module} || true
   coverage report --show-missing
-
 }
 
-bandit_report() {
 
+bandit_report()
+{
   bandit --ini tox.ini -r "$@"
-
 }
 
-create-conda-env() {
 
+create-conda-env()
+{
     local NAME="${1}"
     local PYTHON="${2}"
 
@@ -341,7 +350,6 @@ create-conda-env() {
     run-pip-if-recent-requirements-change "${BIN_DIR}/requirements.txt"
 
     conda deactivate
-
 }
 
 
@@ -350,9 +358,6 @@ activate-conda-env-and-install-requirements()
   for conda_env in "${CONDA_ENV_PYTHON[@]}"
   do
     local conda_env_name="${PROJNAME}-${conda_env}"
-
-    # bugfix
-    CONDA_ENV_NAME="${conda_env_name}"
 
     # cache the conda env name
     echo "${conda_env_name}" >> "${INIT_CONDA_ENVS}"
@@ -404,7 +409,6 @@ _update_conda()
 
 main()
 {
-
   case "${1}" in
 
     update-conda)
